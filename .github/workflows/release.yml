@@ -39,7 +39,7 @@ jobs:
           if (process.env.GITHUB_REF.startsWith('refs/tags/') && process.env.GITHUB_REF_NAME !== tag) {
             throw new Error('Тег должен совпадать с версией пакета');
           }
-          for (const file of [p.typings, p.module, 'README.md', 'LICENSE', 'RELEASE_NOTES.md']) {
+          for (const file of [p.typings, p.module, 'README.md', 'LICENSE', 'THIRD_PARTY_LICENSES.txt', 'RELEASE_NOTES.md']) {
             if (!file || !existsSync(file)) throw new Error(`Отсутствует файл пакета: ${file}`);
           }
           appendFileSync(process.env.GITHUB_OUTPUT, `tag=${tag}\n`);
@@ -49,7 +49,7 @@ jobs:
           RELEASE_TAG: ${{ steps.package.outputs.tag }}
         run: |
           git fetch --depth=1 origin "refs/tags/$RELEASE_TAG:refs/tags/$RELEASE_TAG"
-          git diff --exit-code "$RELEASE_TAG" -- package.json fesm2022 types README.md LICENSE
+          git diff --exit-code "$RELEASE_TAG" -- package.json fesm2022 types README.md LICENSE THIRD_PARTY_LICENSES.txt
       - name: Упаковать пакет и вычислить контрольную сумму
         run: |
           npm pack --ignore-scripts

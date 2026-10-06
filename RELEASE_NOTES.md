@@ -1,17 +1,18 @@
-# ngx-barcode6 1.22.0
+# ngx-barcode6 1.22.1
 
-Поддержка Angular **22.2.1** (линия 22.x), TypeScript **6.0.3**. Пакет собран в Angular Package Format с partial compilation, ESM и декларациями TypeScript.
+JsBarcode **3.12.3** включён в ESM-сборку Angular-пакета. Отдельная зависимость JsBarcode и разрешение `jsbarcode` в `allowedCommonJsDependencies` больше не нужны. Angular **22.x**, проверенная сборка **22.2.1**; компонент, входы `bc-*` и публичные декларации сохранены.
 
-- 28 тестов библиотеки и 3 теста демо прошли; production-сборки библиотеки и демо прошли.
-- Обновлены peer dependencies, метаданные репозитория и русский README. API и имя пакета сохранены.
-- В архив включены README и MIT-лицензия. Архив и SHA256SUMS прикреплены к релизу.
+- **117 тестов библиотеки** и **3 теста демо** прошли после чистой установки. Сравнены 20 форматов и SVG/img/canvas с исходной JsBarcode, параметры отображения, валидация и обновление компонента.
+- В браузере проверены все 19 форматов демо и изменение размеров, ошибок консоли нет.
+- Добавлены воспроизводимый генератор ESM с проверкой исходников и проверка готового пакета в CI. Сохранена полная MIT-лицензия Johan Lindell в THIRD_PARTY_LICENSES.txt.
+- Git-тег содержит готовый пакет с типами, README и лицензиями; архив и SHA256SUMS приложены к релизу.
 
 ## Установка
 
 ```bash
-npm install 'git+https://github.com/victor-robbin/ngx-barcode6.git#v1.22.0'
+npm install 'git+https://github.com/victor-robbin/ngx-barcode6.git#v1.22.1'
 ```
 
-Для ngx-barcode6 также нужен JsBarcode `^3.12.3`. Установка не требует исходников рядом с приложением или сборки workspace. Версия этого форка не публикуется в npm registry.
+Отдельно устанавливать JsBarcode или собирать соседний workspace не требуется. Версия этого форка не публикуется в npm registry.
 
-[Исходники сборки](https://github.com/victor-robbin/ngx-barcode6/commit/bdc95e64dd605adbe323a9b48703d988f492271f) (ветка `main`).
+[Исходники сборки](https://github.com/victor-robbin/ngx-barcode6/commit/dc358598299225311ed060aa06fa7d369175316d) (ветка `main`).

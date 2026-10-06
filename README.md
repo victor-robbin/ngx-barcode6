@@ -4,17 +4,17 @@
 
 ## Совместимость
 
-Релиз **1.22.0** собран и проверен с **Angular 22.2.1**, последней стабильной версией на 06.10.2026. Peer dependencies требуют **Angular 22.x** и **JsBarcode ^3.12.3**. Эта сборка не заявляет совместимость с Angular 17–21; для старых приложений используйте соответствующую предыдущую версию библиотеки.
+Релиз **1.22.1** собран и проверен с **Angular 22.2.1**, последней стабильной версией на 06.10.2026. Peer dependencies требуют **Angular 22.x**. JsBarcode **3.12.3** включён в ESM-сборку пакета; отдельная установка JsBarcode не требуется. Эта сборка не заявляет совместимость с Angular 17–21; для старых приложений используйте соответствующую предыдущую версию библиотеки.
 
-Пакет поставляется в Angular Package Format: ESM, декларации TypeScript, partial compilation. Для сборки исходников используются Node **22.23.3**, npm **11.12.0** и TypeScript **6.0.3**. Требования Angular: [официальная таблица совместимости](https://angular.dev/reference/versions).
+Пакет поставляется в Angular Package Format: ESM, декларации TypeScript, partial compilation. С версии **1.22.1** и Angular-обёртка, и код JsBarcode поставляются как ESM: CommonJS-зависимости JsBarcode и разрешение `jsbarcode` в `allowedCommonJsDependencies` больше не нужны. Для сборки исходников используются Node **22.23.3**, npm **11.12.0** и TypeScript **6.0.3**. Требования Angular: [официальная таблица совместимости](https://angular.dev/reference/versions).
 
 ## Установка
 
 ```bash
-npm install 'git+https://github.com/victor-robbin/ngx-barcode6.git#v1.22.0' 'jsbarcode@^3.12.3'
+npm install 'git+https://github.com/victor-robbin/ngx-barcode6.git#v1.22.1'
 ```
 
-Тег указывает на готовый пакет в корне репозитория. Установка не требует сборки библиотеки или соседнего каталога с исходниками. `package-lock.json` фиксирует коммит тега; `npm ci` воспроизводит установку. Архив `ngx-barcode6-1.22.0.tgz` из GitHub Releases также можно установить через `npm install ./ngx-barcode6-1.22.0.tgz`.
+Тег указывает на готовый пакет в корне репозитория. Установка не требует сборки библиотеки или соседнего каталога с исходниками. `package-lock.json` фиксирует коммит тега; `npm ci` воспроизводит установку. Архив `ngx-barcode6-1.22.1.tgz` из GitHub Releases также можно установить через `npm install ./ngx-barcode6-1.22.1.tgz`.
 
 Имя пакета и импорты остаются `ngx-barcode6`. Публикация этой версии в npm registry не выполняется: для данного форка используйте GitHub-тег или архив релиза.
 
@@ -50,20 +50,24 @@ export class BarcodeComponent {}
 nvm use
 npm ci
 npm run build:lib
+npm run verify:package
 npx ng test ngx-barcode6 --watch=false
 npx ng build barcode
 npx ng test barcode --watch=false
 npm run pack:release
 ```
 
-Для нового релиза измените версии в обоих `package.json`, выполните сборку и тесты и проверьте установку архива в Angular-приложение. Содержимое `dist/ngx-barcode6` перенесите в ветку готовых пакетов, создайте неизменяемый тег и GitHub Release с архивом от `npm pack`. Публикация тега запускает GitHub Actions: проверку пакета, создание GitHub Release, загрузку архива и SHA256SUMS. Файл `.github/workflows/release.yml` и `RELEASE_NOTES.md` должны присутствовать в ветке готовых пакетов. Старые теги не перемещайте. README и лицензия включаются в пакет через настройки ng-packagr.
+JsBarcode и esbuild закреплены в devDependencies точными версиями. `npm ci` и `npm run build:lib` запускают `scripts/build-jsbarcode.mjs`: он проверяет версию и SHA256 исходной точки входа JsBarcode, заменяет единственный CommonJS-экспорт на ESM и проверяет отсутствие CommonJS/внешних импортов в результате. Генерируемый внутренний файл не хранится в Git; повторная генерация воспроизводима. Директива `@ts-nocheck` относится только к сгенерированному стороннему JavaScript, а не к компонентам или публичным декларациям Angular. Алгоритмы, форматы и браузерные точки подключения JsBarcode сохранены. Полная MIT-лицензия JsBarcode включается в `THIRD_PARTY_LICENSES.txt`. Для сборки при установке с `--ignore-scripts` сначала выполните `npm run vendor:jsbarcode`.
 
-## Проверки версии 1.22.0
+Для нового релиза измените версии в обоих `package.json`, выполните сборку и тесты и проверьте установку архива в Angular-приложение. Содержимое `dist/ngx-barcode6` перенесите в ветку готовых пакетов, создайте неизменяемый тег и GitHub Release с архивом от `npm pack`. Публикация тега запускает GitHub Actions: проверку пакета, создание GitHub Release, загрузку архива и SHA256SUMS. Файл `.github/workflows/release.yml` и `RELEASE_NOTES.md` должны присутствовать в ветке готовых пакетов. Старые теги не перемещайте. README, LICENSE и THIRD_PARTY_LICENSES.txt включаются в пакет через настройки ng-packagr. CI дополнительно проверяет ESM без CommonJS, типы и импорт пакета без DOM.
 
-- 28 тестов библиотеки прошли: CODE39 и другие форматы, SVG/img/canvas и обработка некорректных значений.
-- Демо собрано на Angular 22.2.1; 3 теста демо прошли.
+## Проверки версии 1.22.1
+
+- **117 тестов библиотеки** прошли: 20 форматов, точное совпадение кодирования и SVG/img/canvas с оригинальной JsBarcode 3.12.3, параметры текста/цветов/размеров, валидация и обновление входов компонента.
+- Демо собрано на Angular 22.2.1 без CommonJS-предупреждения; **3 теста демо** прошли.
+- Готовый пакет проверен на ESM, декларации без ссылки на внешнюю JsBarcode, сохранение сторонней лицензии и импорт без DOM.
 - Пакет предназначен для установки по Git-тегу и чистой установки `npm ci` без `--force` и `--legacy-peer-deps`.
 
 ## Лицензия
 
-MIT © Bryon Williams, Edgar Giese. Исходные сведения об авторах сохранены в пакете и LICENSE.
+MIT © Bryon Williams, Edgar Giese. Исходные сведения об авторах сохранены в пакете и LICENSE. Включённая JsBarcode: MIT © 2016 Johan Lindell; полный текст — в THIRD_PARTY_LICENSES.txt.
