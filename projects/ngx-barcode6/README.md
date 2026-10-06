@@ -1,92 +1,69 @@
 # ngx-barcode6
 
-An angular component for Angular 17 - 21 for creating 1-D barcodes based on [Lindell's JsBarcode](https://github.com/lindell/JsBarcode).
+Компонент Angular 22 для построения одномерных штрихкодов на основе [JsBarcode](https://github.com/lindell/JsBarcode). Форк [efgiese/ngx-barcode6](https://github.com/efgiese/ngx-barcode6) сохраняет компонент `NgxBarcode6`, селектор `ngx-barcode6` и входные параметры `bc-*`.
 
-This is forked from [yobryon/ngx-barcode](https://github.com/yobryon/ngx-barcode) and upgraded to Angular 6 works on Angular 21.x.
+## Совместимость
 
-## Supported barcodes
+Релиз **1.22.0** собран и проверен с **Angular 22.2.1**, последней стабильной версией на 06.10.2026. Peer dependencies требуют **Angular 22.x** и **JsBarcode ^3.12.3**. Эта сборка не заявляет совместимость с Angular 17–21; для старых приложений используйте соответствующую предыдущую версию библиотеки.
 
-Supports all barcode formats provided by [JsBarcode](https://github.com/lindell/JsBarcode/wiki)
+Пакет поставляется в Angular Package Format: ESM, декларации TypeScript, partial compilation. Для сборки исходников используются Node **22.23.3**, npm **11.12.0** и TypeScript **6.0.3**. Требования Angular: [официальная таблица совместимости](https://angular.dev/reference/versions).
 
-- CODE128
-  - CODE128 (automatic mode switching)
-  - CODE128 A/B/C (force mode)
-- EAN / UPC
-  - EAN13
-  - UPC
-  - EAN8
-  - EAN5
-  - EAN2
-- CODE39
-- ITF
-  - ITF
-  - ITF-14
-- MSI
-  - MSI10
-  - MSI11
-  - MSI1010
-  - MSI1110
-- Pharmacode
-- Codabar
-
-## Installation
-
-To use ngx-barcode6 in your project, install it via npm:
+## Установка
 
 ```bash
-npm install --save ngx-barcode6 jsbarcode@3.12.1
+npm install 'git+https://github.com/victor-robbin/ngx-barcode6.git#v1.22.0' 'jsbarcode@^3.12.3'
 ```
 
-For Angular 8 use `ngx-barcode6@1.0.10`.
+Тег указывает на готовый пакет в корне репозитория. Установка не требует сборки библиотеки или соседнего каталога с исходниками. `package-lock.json` фиксирует коммит тега; `npm ci` воспроизводит установку. Архив `ngx-barcode6-1.22.0.tgz` из GitHub Releases также можно установить через `npm install ./ngx-barcode6-1.22.0.tgz`.
 
-```bash
-npm install --save ngx-barcode6@1.0.10 jsbarcode@3.11.5
-```
+Имя пакета и импорты остаются `ngx-barcode6`. Публикация этой версии в npm registry не выполняется: для данного форка используйте GitHub-тег или архив релиза.
 
-For Angular 10 try `ngx-barcode6@1.0.12`.
-
-Because of Angular 16 and Nodejs 18 i think you can not use this actual version for lower than Angular 15.
-
-From now on, I'm changing the release naming. The second digit in the version indicates the Angular version.
-
-## Usage
-
-Since Angular 19 standalone: true is standard:
+## Использование
 
 ```typescript
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component } from '@angular/core';
 import { NgxBarcode6 } from 'ngx-barcode6';
 
 @Component({
-  selector: 'app-root',
-  imports: [CommonModule, FormsModule, NgxBarcode6],
-  templateUrl: './app.html',
-  styleUrls: ['./app.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-barcode',
+  imports: [NgxBarcode6],
+  template: `
+    <ngx-barcode6
+      bc-format="CODE39"
+      bc-value="1234567890"
+      [bc-width]="2"
+      [bc-height]="80"
+      [bc-display-value]="true"
+    />
+  `,
 })
-export class App {
-  ...
-}
+export class BarcodeComponent {}
 ```
 
-Once the library is imported, you can use the ngx-barcode6 component in your Angular application:
+Для приложения с NgModule добавьте `NgxBarcode6` в `imports` модуля. Поддерживаются SVG, img и canvas через `bc-element-type`, а также параметры размеров, текста и цветов. Форматы: CODE128, EAN/UPC, CODE39, ITF, MSI, Pharmacode и Codabar. Список форматов и настроек: [документация JsBarcode](https://github.com/lindell/JsBarcode/wiki).
 
-```xml
-<div style="text-align: center">
-  <ngx-barcode6
-    [bc-format]="selectedBarcodeObj().value"
-    [bc-width]="selectedWidth()"
-    [bc-height]="selectedHeight()"
-    [bc-font-size]="selectedFontSize()"
-    [bc-value]="selectedBarcodeObj().example"
-    [bc-display-value]="true"
-  >
-  </ngx-barcode6>
-</div>
+## Разработка и релиз
+
+Исходники находятся в ветке `main`, готовые пакеты — в `package-angular-22`. Релизные теги `v1.22.x` указывают на готовые пакеты, а не на workspace. Второе число версии обозначает поддерживаемую основную версию Angular.
+
+```bash
+nvm use
+npm ci
+npm run build:lib
+npx ng test ngx-barcode6 --watch=false
+npx ng build barcode
+npx ng test barcode --watch=false
+npm run pack:release
 ```
 
-## License
+Для нового релиза измените версии в обоих `package.json`, выполните сборку и тесты и проверьте установку архива в Angular-приложение. Содержимое `dist/ngx-barcode6` перенесите в ветку готовых пакетов, создайте неизменяемый тег и GitHub Release с архивом от `npm pack`. Публикация тега запускает GitHub Actions: проверку пакета, создание GitHub Release, загрузку архива и SHA256SUMS. Файл `.github/workflows/release.yml` и `RELEASE_NOTES.md` должны присутствовать в ветке готовых пакетов. Старые теги не перемещайте. README и лицензия включаются в пакет через настройки ng-packagr.
 
-MIT © [Bryon Williams](mailto:bryon.williams@live.com), [Edgar Giese](mailto:edgar@egiese.de)
+## Проверки версии 1.22.0
+
+- 28 тестов библиотеки прошли: CODE39 и другие форматы, SVG/img/canvas и обработка некорректных значений.
+- Демо собрано на Angular 22.2.1; 3 теста демо прошли.
+- Пакет предназначен для установки по Git-тегу и чистой установки `npm ci` без `--force` и `--legacy-peer-deps`.
+
+## Лицензия
+
+MIT © Bryon Williams, Edgar Giese. Исходные сведения об авторах сохранены в пакете и LICENSE.
