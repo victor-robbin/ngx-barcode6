@@ -1,0 +1,53 @@
+{
+  "name": "ngx-barcode6",
+  "version": "1.22.0",
+  "description": "Компонент Angular 22 для построения штрихкодов на основе JsBarcode",
+  "homepage": "https://github.com/victor-robbin/ngx-barcode6#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/victor-robbin/ngx-barcode6.git"
+  },
+  "author": "Edgar Giese <edgar@egiese.de>",
+  "keywords": [
+    "Angular",
+    "Angular17",
+    "Angular18",
+    "Angular19",
+    "Angular20",
+    "Angular21",
+    "barcode",
+    "jsbarcode",
+    "Angular22"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/victor-robbin/ngx-barcode6/issues"
+  },
+  "peerDependencies": {
+    "@angular/common": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "jsbarcode": "^3.12.3"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false,
+  "files": [
+    "fesm2022",
+    "types",
+    "README.md",
+    "LICENSE"
+  ],
+  "module": "fesm2022/ngx-barcode6.mjs",
+  "typings": "types/ngx-barcode6.d.ts",
+  "exports": {
+    "./package.json": {
+      "default": "./package.json"
+    },
+    ".": {
+      "types": "./types/ngx-barcode6.d.ts",
+      "default": "./fesm2022/ngx-barcode6.mjs"
+    }
+  },
+  "type": "module"
+}
