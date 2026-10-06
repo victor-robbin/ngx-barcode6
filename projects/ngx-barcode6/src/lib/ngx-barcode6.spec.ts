@@ -328,3 +328,48 @@ describe('NgxBarcode6 inside a test host', () => {
     expect(barcodeEl.childNodes.length).toBeGreaterThan(0);
   });
 });
+
+
+describe('Обновление входных параметров NgxBarcode6 с ESM', () => {
+  it('заменяет штрихкод при обновлении значения и размеров', async () => {
+    await TestBed.configureTestingModule({ imports: [NgxBarcode6] }).compileComponents();
+    const fixture = TestBed.createComponent(NgxBarcode6);
+    fixture.componentRef.setInput('bc-format', 'CODE39');
+    fixture.componentRef.setInput('bc-value', '12345');
+    fixture.componentRef.setInput('bc-width', 1);
+    fixture.componentRef.setInput('bc-height', 40);
+    fixture.componentRef.setInput('bc-display-value', true);
+    fixture.detectChanges();
+    const before = fixture.nativeElement.querySelector('svg').outerHTML;
+    fixture.componentRef.setInput('bc-value', 'ABC999');
+    fixture.componentRef.setInput('bc-width', 3);
+    fixture.componentRef.setInput('bc-height', 80);
+    fixture.detectChanges();
+    const svg = fixture.nativeElement.querySelector('svg');
+    expect(fixture.nativeElement.querySelectorAll('svg')).toHaveLength(1);
+    expect(svg.outerHTML).not.toBe(before);
+    expect(svg.querySelector('text').textContent).toBe('ABC999');
+    expect(svg.querySelector('rect[height="80"]')).not.toBeNull();
+  });
+
+  it('передаёт bc-valid результат валидации и обрабатывает смену типа элемента', async () => {
+    await TestBed.configureTestingModule({ imports: [NgxBarcode6] }).compileComponents();
+    const fixture = TestBed.createComponent(NgxBarcode6);
+    const validations: boolean[] = [];
+    fixture.componentRef.setInput('bc-format', 'EAN13');
+    fixture.componentRef.setInput('bc-valid', (valid: boolean) => { validations.push(valid); return valid; });
+    fixture.componentRef.setInput('bc-value', 'abc');
+    fixture.detectChanges();
+    expect(validations).toContain(false);
+    fixture.componentRef.setInput('bc-value', '5901234123457');
+    fixture.componentRef.setInput('bc-element-type', 'canvas');
+    fixture.detectChanges();
+    expect(validations.at(-1)).toBe(true);
+    expect(fixture.nativeElement.querySelector('svg')).toBeNull();
+    expect(fixture.nativeElement.querySelector('canvas').toDataURL()).toMatch(/^data:image\/png;base64,/);
+    fixture.componentRef.setInput('bc-element-type', 'img');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('canvas')).toBeNull();
+    expect(fixture.nativeElement.querySelector('img').src).toMatch(/^data:image\/png;base64,/);
+  });
+});

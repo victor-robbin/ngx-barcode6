@@ -30,5 +30,7 @@ jobs:
           npx ng test ngx-barcode6 --watch=false
           npx ng build barcode
           npx ng test barcode --watch=false
+      - name: Проверить ESM, типы и лицензию пакета
+        run: npm run verify:package
       - name: Проверить упаковку
         run: npm pack ./dist/ngx-barcode6 --dry-run

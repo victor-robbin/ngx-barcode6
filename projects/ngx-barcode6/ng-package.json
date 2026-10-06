@@ -5,6 +5,7 @@
     "entryFile": "src/public-api.ts"
   },
   "assets": [
-    "LICENSE"
+    "LICENSE",
+    "THIRD_PARTY_LICENSES.txt"
   ]
 }

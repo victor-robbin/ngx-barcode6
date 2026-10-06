@@ -45,3 +45,6 @@ Thumbs.db
 
 # Архивы релизов
 /*.tgz
+
+# Генерируемая ESM-версия сторонней библиотеки
+/projects/ngx-barcode6/src/lib/vendor/jsbarcode.ts

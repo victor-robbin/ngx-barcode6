@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, effect, ElementRef, inject, input, Renderer2, viewChild } from '@angular/core';
 
-import jsbarcode from 'jsbarcode';
+import jsbarcode from './vendor/jsbarcode';
 
 @Component({
   selector: 'ngx-barcode6',
@@ -41,11 +41,11 @@ export class NgxBarcode6 implements AfterViewInit {
 
   constructor() {
     effect(() => {
-      // Track all input signals
+      // Отслеживаем изменения входных сигналов.
       const barcodeValue = this.value();
       const element = this.bcElement();
 
-      // Only create barcode if we have both value and element
+      // Создаём штрихкод после появления значения и контейнера.
       if (element && barcodeValue) {
         this.createBarcode();
       }
@@ -76,7 +76,7 @@ export class NgxBarcode6 implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // Initial barcode creation is handled by effect
+    // Первоначальное создание штрихкода выполняет effect.
   }
 
   createBarcode(): void {
